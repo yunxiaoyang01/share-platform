@@ -1,0 +1,25 @@
+server:
+  port: 8084
+  tomcat:
+    uri-encoding: utf-8
+spring:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+  profiles:
+    active: dev
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zbk.store
+  configuration:
+    map-underscore-to-camel-case:  true
+logging:
+  level:
+    com:
+      file:
+        share:
+          platform:
+            dao: debug

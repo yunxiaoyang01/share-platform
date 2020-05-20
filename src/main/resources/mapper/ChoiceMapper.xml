@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.file.share.platform.dao.ChoiceMapper">
+  <resultMap id="BaseResultMap" type="com.file.share.platform.model.Choice">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="question" jdbcType="VARCHAR" property="question" />
+    <result column="optionA" jdbcType="VARCHAR" property="optiona" />
+    <result column="optionB" jdbcType="VARCHAR" property="optionb" />
+    <result column="optionC" jdbcType="VARCHAR" property="optionc" />
+    <result column="optionD" jdbcType="VARCHAR" property="optiond" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+  </resultMap>
+</mapper>
