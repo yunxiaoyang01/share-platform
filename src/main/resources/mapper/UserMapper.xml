@@ -25,4 +25,11 @@
     from user
     where account_number = #{accountNumber,jdbcType=VARCHAR}
   </select>
+
+  <select id="findByToken" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where token = #{token,jdbcType=VARCHAR}
+  </select>
 </mapper>

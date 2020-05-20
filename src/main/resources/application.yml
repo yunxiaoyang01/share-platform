@@ -8,7 +8,7 @@ spring:
   resources:
     add-mappings: false
   profiles:
-    active: dev
+    active: test
   jackson:
     property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
 mybatis:

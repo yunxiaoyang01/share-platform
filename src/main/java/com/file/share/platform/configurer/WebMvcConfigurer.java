@@ -7,6 +7,8 @@ import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultCode;
 import com.file.share.platform.core.ServiceException;
+import com.file.share.platform.dao.UserMapper;
+import com.file.share.platform.model.User;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,9 +23,11 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
+import static com.file.share.platform.core.ProjectConstant.*;
 /**
  * Spring MVC 配置
  */
@@ -43,6 +47,9 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
     private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件
+
+    @Resource
+    private UserMapper userMapper;
 
     //使用阿里 FastJson 作为JSON MessageConverter
     @Override
@@ -111,21 +118,35 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
                 @Override
                 public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                     //验证签名
-                    boolean pass = validateSign(request);
-                    if (pass) {
-                        return true;
-                    } else {
-                        logger.warn("签名认证失败，请求接口：{}，请求IP：{}，请求参数：{}",
-                                request.getRequestURI(), getIpAddress(request), JSON.toJSONString(request.getParameterMap()));
-
-                        Result result = new Result();
-                        result.setCode(ResultCode.UNAUTHORIZED).setMessage("签名认证失败");
-                        responseResult(response, result);
-                        return false;
+                    String token = request.getHeader("token");
+                    if (token !=null&&!token.equals("")){
+                        boolean pass = tokenCheck(request);
+                        if (pass){
+                            return true;
+                        }else{
+                            logger.warn("token校验失败，请求接口：{}，请求IP：{}，请求参数：{}",
+                                    request.getRequestURI(), getIpAddress(request), JSON.toJSONString(request.getParameterMap()));
+                            Result result = new Result();
+                            result.setCode(ResultCode.NOT_LOGIN).setMessage("用户未登录");
+                            responseResult(response, result);
+                            return false;
+                        }
                     }
+                   return true;
                 }
-            });
+            }).excludePathPatterns("/user/register","/user/login","/file/**");
         }
+    }
+    private boolean tokenCheck(HttpServletRequest request) {
+        String token = request.getHeader("token");
+        if (token==null||token.equals("")){
+            return false;
+        }
+        User userLogin = userMapper.findByToken(token);
+        if (userLogin==null){
+            return false;
+        }
+        return true;
     }
 
     private void responseResult(HttpServletResponse response, Result result) {
@@ -190,5 +211,11 @@ public class WebMvcConfigurer extends WebMvcConfigurerAdapter {
         }
 
         return ip;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String resourceLoactions = "file:/"+PROJECT_PATH+STATIC_PATH;
+        registry.addResourceHandler("/file/**").addResourceLocations(resourceLoactions);
     }
 }

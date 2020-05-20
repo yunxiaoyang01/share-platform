@@ -18,5 +18,9 @@ public final class ProjectConstant {
     public static final String TeacherRole = "teacher";
     public static final String AdminRole = "admin";
 
+    public static  final String PROJECT_PATH = System.getProperty("user.dir");
+
+    public static final String STATIC_PATH = "/src/main/resources/static/";
+
 
 }

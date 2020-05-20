@@ -5,4 +5,6 @@ import com.file.share.platform.model.User;
 
 public interface UserMapper extends Mapper<User> {
     User findByAccountNumber(String accountNumber);
+
+    User findByToken(String token);
 }
