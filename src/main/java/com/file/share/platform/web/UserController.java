@@ -15,6 +15,7 @@ import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import static com.file.share.platform.core.ProjectConstant.*;
@@ -26,24 +27,39 @@ import static com.file.share.platform.core.ProjectConstant.*;
 public class UserController extends BaseController{
 
     @PostMapping("/add")
-    public Result add(User user) {
+    public Result add(@RequestBody User user) {
+        user.setCreateTime(new Date());
+        user.setPassword("12345");
         userService.save(user);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+
+    @GetMapping("/resetPassword")
+    public Result resetPassword(@RequestParam Integer id){
+        User user = userService.findById(id);
+        if (user==null){
+            return ResultGenerator.genFailResult("用户不存在");
+        }
+        user.setPassword("123456");
+        user.setUpdateTime(new Date());
+        userService.update(user);
+        return ResultGenerator.genSuccessResult();
+    }
+
+    @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         userService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(User user) {
+    public Result update(@RequestBody User user) {
         userService.update(user);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         User user = userService.findById(id);
         return ResultGenerator.genSuccessResult(user);
@@ -91,4 +107,14 @@ public class UserController extends BaseController{
         userService.update(user);
         return ResultGenerator.genSuccessResult(user);
     }
+
+    @PostMapping("/getInfo")
+    public Result getUserInfo(HttpServletRequest request){
+        User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
+        return ResultGenerator.genSuccessResult(user);
+    }
+
 }

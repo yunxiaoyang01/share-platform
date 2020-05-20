@@ -24,4 +24,10 @@ public class ResultGenerator {
                 .setCode(ResultCode.FAIL)
                 .setMessage(message);
     }
+
+    public static Result genNotLogin(){
+        return new Result()
+                .setCode(ResultCode.NOT_LOGIN)
+                .setMessage("用户未登录");
+    }
 }
