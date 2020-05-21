@@ -40,6 +40,9 @@ public class FileController extends BaseController{
     @PostMapping("/add")
     public Result add(@RequestBody File file,HttpServletRequest request) {
         User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
         file.setUploador(user.getUserName());
         file.setUserId(user.getId());
         file.setCreateTime(new Date());
@@ -88,7 +91,7 @@ public class FileController extends BaseController{
         for (File file:list){
             FileResponse fileResponse = new FileResponse();
             BeanUtils.copyProperties(file,fileResponse);
-            if(file.getUserId().equals(user.getId())){
+            if(file.getUserId().equals(user.getId())||user.getRole().equals("admin")){
                 fileResponse.setMine(true);
             }else {
                 fileResponse.setMine(false);
