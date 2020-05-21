@@ -2,12 +2,19 @@ package com.file.share.platform.web;
 import com.alibaba.fastjson.JSONObject;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
+import com.file.share.platform.model.Course;
 import com.file.share.platform.model.File;
+import com.file.share.platform.model.User;
+import com.file.share.platform.model.request.FileSearch;
+import com.file.share.platform.model.response.FileResponse;
 import com.file.share.platform.service.FileService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +23,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import static com.file.share.platform.core.ProjectConstant.*;
@@ -24,39 +33,71 @@ import static com.file.share.platform.core.ProjectConstant.*;
 */
 @RestController
 @RequestMapping("/file")
-public class FileController {
+public class FileController extends BaseController{
     @Resource
     private FileService fileService;
 
     @PostMapping("/add")
-    public Result add(@RequestBody File file) {
+    public Result add(@RequestBody File file,HttpServletRequest request) {
+        User user = getUserByToken(request);
+        file.setUploador(user.getUserName());
+        file.setUserId(user.getId());
+        file.setCreateTime(new Date());
+        file.setDownNum(0);
         fileService.save(file);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         fileService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(File file) {
+    public Result update(@RequestBody File file) {
+        file.setUpdateTime(new Date());
         fileService.update(file);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         File file = fileService.findById(id);
         return ResultGenerator.genSuccessResult(file);
     }
 
     @PostMapping("/list")
-    public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        List<File> list = fileService.findAll();
-        PageInfo pageInfo = new PageInfo(list);
+    public Result list(FileSearch fileSearch,HttpServletRequest request) {
+        User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
+        PageHelper.startPage(fileSearch.getPage(), fileSearch.getSize());
+        Condition condition = new Condition(File.class);
+        Example.Criteria criteria = condition.createCriteria();
+        if (fileSearch.getCourseId()!=null&&fileSearch.getCourseId()>0){
+            criteria.andEqualTo("courseId",fileSearch.getCourseId());
+        }
+        if (fileSearch.getFileType()!=null&&fileSearch.getFileType()>0){
+            criteria.andEqualTo("fileType",fileSearch.getFileType());
+        }
+        condition.orderBy("createTime").desc();
+        List<File> list = fileService.findByCondition(condition);
+        List<FileResponse> result = new ArrayList<>();
+        for (File file:list){
+            FileResponse fileResponse = new FileResponse();
+            BeanUtils.copyProperties(file,fileResponse);
+            if(file.getUserId().equals(user.getId())){
+                fileResponse.setMine(true);
+            }else {
+                fileResponse.setMine(false);
+            }
+            Course course = courseService.findById(file.getCourseId());
+            fileResponse.setCourseName(course.getCourseName());
+            result.add(fileResponse);
+        }
+        PageInfo pageInfo = new PageInfo(result);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
 
@@ -84,6 +125,7 @@ public class FileController {
     @PostMapping(value = "/download")
     public Result fileDownLoad(@RequestBody JSONObject jsonObject , HttpServletResponse response){
         String fileUrl = jsonObject.getString("file_url");
+        Integer id = jsonObject.getInteger("id");
         String[] fileArray = fileUrl.split("/");
         String pathName = PROJECT_PATH+STATIC_PATH+fileArray[fileArray.length-1];
         java.io.File file = new java.io.File(pathName);
@@ -91,6 +133,11 @@ public class FileController {
             return ResultGenerator.genFailResult("文件不存在");
         }
         try {
+            //更新资源
+            File file1= fileService.findById(id);
+            file1.setDownNum(file1.getDownNum()+1);
+            file1.setUpdateTime(new Date());
+            fileService.update(file1);
             //设置响应头，控制浏览器下载该文件
             response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(fileArray[fileArray.length-1], "UTF-8"));
             response.setHeader("content-transfer-encoding","binary");

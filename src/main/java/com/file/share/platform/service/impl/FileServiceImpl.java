@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -19,4 +20,8 @@ public class FileServiceImpl extends AbstractService<File> implements FileServic
     @Resource
     private FileMapper fileMapper;
 
+    @Override
+    public List<File> findFileByCourseId(Integer courseId) {
+        return fileMapper.findFileByCourseId(courseId);
+    }
 }

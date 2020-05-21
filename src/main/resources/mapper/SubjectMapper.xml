@@ -14,4 +14,13 @@
     <result column="judge_score" jdbcType="INTEGER" property="judgeScore" />
     <result column="all_score" jdbcType="INTEGER" property="allScore" />
   </resultMap>
+  <sql id="Base_Column_List">
+    id,name,course_id,choice_num,judge_num,choice_score,judge_score,all_score
+  </sql>
+  <select id="findSubjectByCourseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from subject
+    where course_id = #{courseId,jdbcType=INTEGER}
+  </select>
 </mapper>

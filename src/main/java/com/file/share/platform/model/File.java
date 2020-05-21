@@ -1,5 +1,7 @@
 package com.file.share.platform.model;
 
+import org.springframework.stereotype.Controller;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -57,6 +59,30 @@ public class File {
      */
     @Column(name = "file_note")
     private String fileNote;
+
+
+    @Column(name = "course_id")
+    private Integer courseId;
+
+
+    @Column(name = "user_id")
+    private Integer userId;
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     /**
      * 获取主键

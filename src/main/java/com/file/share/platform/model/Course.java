@@ -1,5 +1,7 @@
 package com.file.share.platform.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import javax.persistence.*;
 
@@ -21,12 +23,14 @@ public class Course {
      * 创建时间
      */
     @Column(name = "create_time")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date createTime;
 
     /**
      * 更新时间
      */
     @Column(name = "update_time")
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date updateTime;
 
     /**
