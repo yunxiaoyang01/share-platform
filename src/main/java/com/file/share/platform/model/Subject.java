@@ -51,6 +51,19 @@ public class Subject {
     @Column(name = "all_score")
     private Integer allScore;
 
+
+    @Column(name="user_id")
+    private Integer userId;
+
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
     /**
      * 获取主键
      *

@@ -28,6 +28,10 @@ public class UserController extends BaseController{
 
     @PostMapping("/add")
     public Result add(@RequestBody User user) {
+        User user1 = userService.findByAccountNumber(user.getAccountNumber());
+        if (user1!=null){
+            return ResultGenerator.genFailResult("当前手机号已经注册过了");
+        }
         user.setCreateTime(new Date());
         user.setPassword("12345");
         userService.save(user);
@@ -88,12 +92,18 @@ public class UserController extends BaseController{
         if (!userReg.getConfirmPassword().equals(userReg.getPassword())){
             return ResultGenerator.genFailResult("用户两次密码不一致");
         }
-        User user = new User();
+        User user = userService.findByAccountNumber(userReg.getAccountNumber());
+        if (user!=null){
+            return ResultGenerator.genFailResult("当前手机号已经注册过了，请在登陆页面登陆");
+        }
+        user = new User();
         BeanUtils.copyProperties(userReg,user);
         user.setCreateTime(new Date());
         user.setRole(StudentRole);
+        String token = RandomUtil.genRandomNum();
+        user.setToken(token);
         userService.save(user);
-        return ResultGenerator.genSuccessResult("注册成功");
+        return ResultGenerator.genSuccessResult(user);
     }
     @PostMapping("/login")
     public Result login(@RequestBody UserLogin userLogin){

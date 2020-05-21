@@ -2,15 +2,14 @@ package com.file.share.platform.web;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
 import com.file.share.platform.model.Subject;
+import com.file.share.platform.model.User;
 import com.file.share.platform.service.SubjectService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -18,12 +17,15 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/subject")
-public class SubjectController {
-    @Resource
-    private SubjectService subjectService;
+public class SubjectController extends BaseController{
 
     @PostMapping("/add")
-    public Result add(Subject subject) {
+    public Result add(@RequestBody Subject subject, HttpServletRequest request) {
+        User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
+        subject.setUserId(user.getId());
         subjectService.save(subject);
         return ResultGenerator.genSuccessResult();
     }

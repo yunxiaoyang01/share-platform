@@ -74,4 +74,9 @@ public class CourseController extends BaseController{
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
     }
+    @PostMapping("/findAll")
+    public Result findAll(){
+        List<Course> list = courseService.findAll();
+        return ResultGenerator.genSuccessResult(list);
+    }
 }
