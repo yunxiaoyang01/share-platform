@@ -71,7 +71,7 @@ public class FileController extends BaseController{
     }
 
     @PostMapping("/list")
-    public Result list(FileSearch fileSearch,HttpServletRequest request) {
+    public Result list(@RequestBody FileSearch fileSearch,HttpServletRequest request) {
         User user = getUserByToken(request);
         if (user==null){
             return ResultGenerator.genNotLogin();
