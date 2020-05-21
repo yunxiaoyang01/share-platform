@@ -16,9 +16,10 @@
     <result column="file_note" jdbcType="LONGVARCHAR" property="fileNote" />
     <result column="course_id" jdbcType="INTEGER" property="courseId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="orgin_file_name" jdbcType="VARCHAR" property="orginFileName" />
   </resultMap>
   <sql id="Base_Column_List">
-    id,file_name,uploador,create_time,update_time,down_num,file_type,file_note
+    id,file_name,uploador,create_time,update_time,down_num,file_type,file_note,orgin_file_name
   </sql>
   <select id="findFileByCourseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select

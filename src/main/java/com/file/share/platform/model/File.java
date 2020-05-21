@@ -49,7 +49,7 @@ public class File {
     private Integer downNum;
 
     /**
-     * 0视频1音频2图片3文本文件
+     * 1视频2音频3图片4文本文件
      */
     @Column(name = "file_type")
     private Integer fileType;
@@ -67,6 +67,17 @@ public class File {
 
     @Column(name = "user_id")
     private Integer userId;
+
+    @Column(name = "orgin_file_name")
+    private String orginFileName;
+
+    public String getOrginFileName() {
+        return orginFileName;
+    }
+
+    public void setOrginFileName(String orginFileName) {
+        this.orginFileName = orginFileName;
+    }
 
     public Integer getCourseId() {
         return courseId;

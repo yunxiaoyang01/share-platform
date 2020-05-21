@@ -2,15 +2,14 @@ package com.file.share.platform.web;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
 import com.file.share.platform.model.Choice;
+import com.file.share.platform.model.Subject;
 import com.file.share.platform.service.ChoiceService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,29 +17,37 @@ import java.util.List;
 */
 @RestController
 @RequestMapping("/choice")
-public class ChoiceController {
-    @Resource
-    private ChoiceService choiceService;
+public class ChoiceController extends BaseController{
+
 
     @PostMapping("/add")
-    public Result add(Choice choice) {
+    public Result add(@RequestBody Choice choice) {
+        choice.setCreateTime(new Date());
         choiceService.save(choice);
+        Subject subject = subjectService.findById(choice.getSubjectId());
+        if (subject==null){
+            return ResultGenerator.genFailResult("当前试卷不存在");
+        }
+        subject.setChoiceNum(subject.getChoiceNum()==null?1:subject.getChoiceNum()+1);
+        subject.setAllScore(subject.getAllScore()==null?subject.getChoiceScore():(subject.getAllScore()+subject.getChoiceScore()));
+        subjectService.update(subject);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         choiceService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
     @PostMapping("/update")
-    public Result update(Choice choice) {
+    public Result update(@RequestBody Choice choice) {
+        choice.setUpdateTime(new Date());
         choiceService.update(choice);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         Choice choice = choiceService.findById(id);
         return ResultGenerator.genSuccessResult(choice);
