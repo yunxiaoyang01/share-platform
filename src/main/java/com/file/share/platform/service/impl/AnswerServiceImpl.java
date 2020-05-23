@@ -8,6 +8,8 @@ import com.file.share.platform.model.response.JudgeAnswer;
 import com.file.share.platform.model.response.ResultScore;
 import com.file.share.platform.service.AnswerService;
 import com.file.share.platform.core.AbstractService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Condition;
@@ -141,16 +143,28 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             //遍历所有的选择题,得到对应的答案
             Answer answer = answerMapper.getAnswer(userId,subjectId,choice.getId(),1);
             ChoiceAnswer choiceAnswer = new ChoiceAnswer();
-            choiceAnswer.setAnswer(answer);
-            choiceAnswer.setChoice(choice);
+            BeanUtils.copyProperties(choice,choiceAnswer);
+            choiceAnswer.setAnswer(answer.getAnswer());
+            choiceAnswer.setGoodAnswer(answer.getGoodAnswer());
+            if(answer.getAnswer().equals(answer.getGoodAnswer())){
+                choiceAnswer.setTrue(true);
+            }else{
+                choiceAnswer.setTrue(false);
+            }
             choiceAnswers.add(choiceAnswer);//加入集合
         }
         for(Judge judge : judges){
             //遍历所有的判断题,得到对应的答案
             Answer answer = answerMapper.getAnswer(userId,subjectId, judge.getId(),2);
             JudgeAnswer judgeAnswer = new JudgeAnswer();
-            judgeAnswer.setAnswer(answer);
-            judgeAnswer.setJudge(judge);
+            BeanUtils.copyProperties(judge,judgeAnswer);
+            judgeAnswer.setAnswer(answer.getAnswer());
+            judgeAnswer.setGoodAnswer(answer.getGoodAnswer());
+            if(answer.getAnswer().equals(answer.getGoodAnswer())){
+                judgeAnswer.setTrue(true);
+            }else{
+                judgeAnswer.setTrue(false);
+            }
             judgeAnswers.add(judgeAnswer);//加入集合
         }
         ResultScore resultScore = new ResultScore();

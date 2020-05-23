@@ -127,4 +127,17 @@ public class UserController extends BaseController{
         return ResultGenerator.genSuccessResult(user);
     }
 
+
+    @PostMapping("/logout")
+    public Result logout(HttpServletRequest request){
+        User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
+        user.setToken("");
+        user.setUpdateTime(new Date());
+        userService.update(user);
+        return ResultGenerator.genSuccessResult();
+    }
+
 }

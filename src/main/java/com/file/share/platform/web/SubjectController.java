@@ -3,10 +3,7 @@ import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
 import com.file.share.platform.model.*;
 import com.file.share.platform.model.request.SubjectSearch;
-import com.file.share.platform.model.response.ChoiceResp;
-import com.file.share.platform.model.response.JudgeResp;
-import com.file.share.platform.model.response.QuestionResponse;
-import com.file.share.platform.model.response.SubjectResp;
+import com.file.share.platform.model.response.*;
 import com.file.share.platform.service.SubjectService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -81,9 +78,16 @@ public class SubjectController extends BaseController{
             SubjectResp subjectResp = new SubjectResp();
             BeanUtils.copyProperties(subject,subjectResp);
             Course course = courseService.findById(subject.getCourseId());
-            Score score = scoreService.findScoreByCondition(subject.getId(),user.getId());
-            if (score!=null){
-                subjectResp.setExam(true);
+            if (user.getRole().equals("teacher")){
+                List<Score> scoreList = scoreService.findScoreBySubjectId(subject.getId());
+                if (scoreList!=null&&scoreList.size()>0){
+                    subjectResp.setExam(true);
+                }
+            }else{
+                Score score = scoreService.findScoreByCondition(subject.getId(),user.getId());
+                if (score!=null){
+                    subjectResp.setExam(true);
+                }
             }
             subjectResp.setExam(false);
             subjectResp.setCourseName(course.getCourseName());
@@ -94,28 +98,42 @@ public class SubjectController extends BaseController{
     }
 
     @GetMapping("/questionList")
-    public Result questionList(@RequestParam(value = "subject_id") Integer subjectId){
+    public Result questionList(@RequestParam(value = "subject_id") Integer subjectId,HttpServletRequest request){
+        User user = getUserByToken(request);
+        if (user==null){
+            return ResultGenerator.genNotLogin();
+        }
+        Score score= scoreService.findScoreByCondition(subjectId,user.getId());
+        if (score==null){
+            Subject subject = subjectService.findById(subjectId);
+            List<Choice> choices = choiceService.findListBySubjectId(subjectId);
+            List<Judge> judges = judgeService.findListBySubjectId(subjectId);
+            QuestionResponse questionResponse = new QuestionResponse();
+            Course course = courseService.findById(subject.getCourseId());
+            questionResponse.setCourseName(course.getCourseName());
+            questionResponse.setUserName(user.getUserName());
+            BeanUtils.copyProperties(subject,questionResponse);
+            List<ChoiceResp> choiceResps = new ArrayList<>();
+            for(Choice choice:choices){
+                ChoiceResp choiceResp = new ChoiceResp();
+                BeanUtils.copyProperties(choice,choiceResp);
+                choiceResp.setQuestionType(1);
+                choiceResps.add(choiceResp);
+            }
+            List<JudgeResp> judgeResps = new ArrayList<>();
+            for(Judge judge:judges){
+                JudgeResp judgeResp = new JudgeResp();
+                BeanUtils.copyProperties(judge,judgeResp);
+                judgeResp.setQuestionType(2);
+                judgeResps.add(judgeResp);
+            }
+            questionResponse.setChoices(choiceResps);
+            questionResponse.setJudges(judgeResps);
+            return ResultGenerator.genSuccessResult(questionResponse);
+        }
+        ResultScore resultScore = answerService.getResultScore(user.getId(),subjectId);
         Subject subject = subjectService.findById(subjectId);
-        List<Choice> choices = choiceService.findListBySubjectId(subjectId);
-        List<Judge> judges = judgeService.findListBySubjectId(subjectId);
-        QuestionResponse questionResponse = new QuestionResponse();
-        BeanUtils.copyProperties(subject,questionResponse);
-        List<ChoiceResp> choiceResps = new ArrayList<>();
-        for(Choice choice:choices){
-            ChoiceResp choiceResp = new ChoiceResp();
-            BeanUtils.copyProperties(choice,choiceResp);
-            choiceResp.setQuestionType(1);
-            choiceResps.add(choiceResp);
-        }
-        List<JudgeResp> judgeResps = new ArrayList<>();
-        for(Judge judge:judges){
-            JudgeResp judgeResp = new JudgeResp();
-            BeanUtils.copyProperties(judge,judgeResp);
-            judgeResp.setQuestionType(2);
-            judgeResps.add(judgeResp);
-        }
-        questionResponse.setChoices(choiceResps);
-        questionResponse.setJudges(judgeResps);
-        return ResultGenerator.genSuccessResult(questionResponse);
+        BeanUtils.copyProperties(subject,resultScore);
+        return ResultGenerator.genSuccessResult(resultScore);
     }
 }

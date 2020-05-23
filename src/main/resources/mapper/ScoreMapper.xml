@@ -17,4 +17,8 @@
     where user_id = #{userId,jdbcType=INTEGER}
     and subject_id = #{subjectId,jdbcType=INTEGER}
   </select>
+  <select id="findScoreBySubjectId" resultMap="BaseResultMap">
+      select  * from score
+    where subject_id = #{subjectId,jdbcType=INTEGER}
+  </select>
 </mapper>

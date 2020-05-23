@@ -2,35 +2,13 @@ package com.file.share.platform.model.response;
 
 import com.file.share.platform.model.Answer;
 import com.file.share.platform.model.Choice;
+import lombok.Data;
 
-public class ChoiceAnswer {
+@Data
+public class ChoiceAnswer extends Choice{
+	private String answer;
 
-	private Answer answer;
-	private Choice choice;
-	/**
-	 * @return the answer
-	 */
-	public Answer getAnswer() {
-		return answer;
-	}
-	/**
-	 * @param answer the answer to set
-	 */
-	public void setAnswer(Answer answer) {
-		this.answer = answer;
-	}
-	/**
-	 * @return the choice
-	 */
-	public Choice getChoice() {
-		return choice;
-	}
-	/**
-	 * @param choice the choice to set
-	 */
-	public void setChoice(Choice choice) {
-		this.choice = choice;
-	}
-	
-	
+	private String goodAnswer;
+
+	private boolean isTrue;
 }

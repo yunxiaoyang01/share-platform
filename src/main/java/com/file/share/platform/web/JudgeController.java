@@ -40,7 +40,7 @@ public class JudgeController extends BaseController{
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         Judge judge = judgeService.findById(id);
         Subject subject = subjectService.findById(judge.getSubjectId());

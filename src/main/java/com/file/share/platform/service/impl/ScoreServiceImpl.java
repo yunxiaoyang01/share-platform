@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -22,5 +23,10 @@ public class ScoreServiceImpl extends AbstractService<Score> implements ScoreSer
     @Override
     public Score findScoreByCondition(Integer subjectId, Integer userId) {
         return scoreMapper.findScoreByCondition(subjectId,userId);
+    }
+
+    @Override
+    public List<Score> findScoreBySubjectId(Integer subjectId) {
+        return scoreMapper.findScoreBySubjectId(subjectId);
     }
 }
