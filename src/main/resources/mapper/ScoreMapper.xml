@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.file.share.platform.dao.ScoreMapper">
+  <resultMap id="BaseResultMap" type="com.file.share.platform.model.Score">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="choice_score" jdbcType="INTEGER" property="choiceScore" />
+    <result column="judge_score" jdbcType="INTEGER" property="judgeScore" />
+    <result column="all_score" jdbcType="INTEGER" property="allScore" />
+  </resultMap>
+</mapper>
