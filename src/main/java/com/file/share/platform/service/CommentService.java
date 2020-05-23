@@ -1,6 +1,7 @@
 package com.file.share.platform.service;
 import com.file.share.platform.model.Comment;
 import com.file.share.platform.core.Service;
+import com.file.share.platform.model.User;
 
 
 /**
@@ -8,4 +9,5 @@ import com.file.share.platform.core.Service;
  */
 public interface CommentService extends Service<Comment> {
 
+    void saveComment(Comment comment, User user);
 }

@@ -6,19 +6,11 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="item_id" jdbcType="VARCHAR" property="itemId" />
-    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
-    <result column="anonymous" jdbcType="BIT" property="anonymous" />
-    <result column="user_id" jdbcType="VARCHAR" property="userId" />
-    <result column="attribute1" jdbcType="VARCHAR" property="attribute1" />
-    <result column="attribute2" jdbcType="VARCHAR" property="attribute2" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="p_id" jdbcType="INTEGER" property="pId"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="item_title" jdbcType="VARCHAR" property="itemTitle" />
-    <result column="status" jdbcType="BIT" property="status" />
-    <result column="updator" jdbcType="VARCHAR" property="updator" />
-    <result column="is_auto_comment" jdbcType="TINYINT" property="isAutoComment" />
-    <result column="info" jdbcType="LONGVARCHAR" property="info" />
-    <result column="info_photo" jdbcType="LONGVARCHAR" property="infoPhoto" />
+    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="file_id" jdbcType="INTEGER" property="fileId"/>
   </resultMap>
 </mapper>
