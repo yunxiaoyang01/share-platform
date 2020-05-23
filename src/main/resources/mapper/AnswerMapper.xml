@@ -14,4 +14,13 @@
     <result column="good_answer" jdbcType="VARCHAR" property="goodAnswer" />
     <result column="score" jdbcType="INTEGER" property="score" />
   </resultMap>
+
+  <select id="getAnswer" resultMap="BaseResultMap">
+    select *
+    from answer
+    where user_id = #{userId,jdbcType=INTEGER}
+    and subject_id = #{subjectId,jdbcType=INTEGER}
+    and question = #{question,jdbcType=INTEGER}
+    and question_type= #{questionType,jdbcType=INTEGER}
+  </select>
 </mapper>

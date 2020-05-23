@@ -3,6 +3,7 @@ import com.file.share.platform.model.Answer;
 import com.file.share.platform.core.Service;
 import com.file.share.platform.model.User;
 import com.file.share.platform.model.request.AnswerReq;
+import com.file.share.platform.model.response.ResultScore;
 
 
 /**
@@ -11,4 +12,6 @@ import com.file.share.platform.model.request.AnswerReq;
 public interface AnswerService extends Service<Answer> {
 
     boolean submitAnswer(AnswerReq answerReq, User user);
+
+    ResultScore getResultScore(Integer id, Integer subjectId);
 }

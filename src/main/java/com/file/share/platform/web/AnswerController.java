@@ -2,12 +2,17 @@ package com.file.share.platform.web;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
 import com.file.share.platform.model.Answer;
+import com.file.share.platform.model.Score;
 import com.file.share.platform.model.User;
 import com.file.share.platform.model.request.AnswerReq;
+import com.file.share.platform.model.response.ResultScore;
 import com.file.share.platform.service.AnswerService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.entity.Condition;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -61,6 +66,10 @@ public class AnswerController extends BaseController{
             return ResultGenerator.genNotLogin();
         }
         boolean b = answerService.submitAnswer(answerReq,user);
-        return ResultGenerator.genSuccessResult();
+        if (b){
+            ResultScore resultScore = answerService.getResultScore(user.getId(),answerReq.getSubjectId());
+            return ResultGenerator.genSuccessResult(resultScore);
+        }
+        return ResultGenerator.genFailResult("试卷提交失败");
     }
 }

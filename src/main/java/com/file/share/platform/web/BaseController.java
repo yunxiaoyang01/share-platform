@@ -35,6 +35,9 @@ public class BaseController {
     @Resource
     public AnswerService answerService;
 
+    @Resource
+    public ScoreService scoreService;
+
     public User getUserByToken(HttpServletRequest request) {
         String token = request.getHeader("token");
         if(token==null||token.equals("")){

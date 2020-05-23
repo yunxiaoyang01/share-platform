@@ -3,6 +3,9 @@ package com.file.share.platform.service.impl;
 import com.file.share.platform.dao.*;
 import com.file.share.platform.model.*;
 import com.file.share.platform.model.request.AnswerReq;
+import com.file.share.platform.model.response.ChoiceAnswer;
+import com.file.share.platform.model.response.JudgeAnswer;
+import com.file.share.platform.model.response.ResultScore;
 import com.file.share.platform.service.AnswerService;
 import com.file.share.platform.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import tk.mybatis.mapper.entity.Condition;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -120,6 +124,39 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             throw new RuntimeException(e1.getMessage());
         }
         return b;
+    }
+
+    @Override
+    public ResultScore getResultScore(Integer userId, Integer subjectId) {
+        List<ChoiceAnswer> choiceAnswers = new ArrayList<ChoiceAnswer>();
+        List<JudgeAnswer> judgeAnswers = new ArrayList<JudgeAnswer>();
+        // TODO Auto-generated method stub
+        Subject subjectById = subjectMapper.selectByPrimaryKey(subjectId);
+        //得到所有的选择题
+        List<Choice> choices = choiceMapper.findListBySubjectId(subjectId);
+        //得到所有的判断题
+        List<Judge> judges = judgeMapper.findListBySubjectId(subjectId);
+
+        for(Choice choice : choices){
+            //遍历所有的选择题,得到对应的答案
+            Answer answer = answerMapper.getAnswer(userId,subjectId,choice.getId(),1);
+            ChoiceAnswer choiceAnswer = new ChoiceAnswer();
+            choiceAnswer.setAnswer(answer);
+            choiceAnswer.setChoice(choice);
+            choiceAnswers.add(choiceAnswer);//加入集合
+        }
+        for(Judge judge : judges){
+            //遍历所有的判断题,得到对应的答案
+            Answer answer = answerMapper.getAnswer(userId,subjectId, judge.getId(),2);
+            JudgeAnswer judgeAnswer = new JudgeAnswer();
+            judgeAnswer.setAnswer(answer);
+            judgeAnswer.setJudge(judge);
+            judgeAnswers.add(judgeAnswer);//加入集合
+        }
+        ResultScore resultScore = new ResultScore();
+        resultScore.setChoiceAnswers(choiceAnswers);
+        resultScore.setJudgeAnswers(judgeAnswers);
+        return resultScore;
     }
 
     public HashMap<String, Answer> splitAnswer(Integer  userId,Integer subjectId,String answer){
