@@ -19,4 +19,8 @@ public class ScoreServiceImpl extends AbstractService<Score> implements ScoreSer
     @Resource
     private ScoreMapper scoreMapper;
 
+    @Override
+    public Score findScoreByCondition(Integer subjectId, Integer userId) {
+        return scoreMapper.findScoreByCondition(subjectId,userId);
+    }
 }

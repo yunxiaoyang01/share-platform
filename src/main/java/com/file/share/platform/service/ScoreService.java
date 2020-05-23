@@ -8,4 +8,5 @@ import com.file.share.platform.core.Service;
  */
 public interface ScoreService extends Service<Score> {
 
+    Score findScoreByCondition(Integer id, Integer id1);
 }

@@ -7,4 +7,6 @@ import lombok.Data;
 public class SubjectResp extends Subject {
 
     private String courseName;
+
+    private boolean isExam;
 }
