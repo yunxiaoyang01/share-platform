@@ -17,7 +17,7 @@ spring:
       maxRequestSize: 100MB
 mybatis:
   mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.zbk.store
+  type-aliases-package: com.file.share.platform.model
   configuration:
     map-underscore-to-camel-case:  true
 logging:

@@ -21,4 +21,10 @@
       select  * from score
     where subject_id = #{subjectId,jdbcType=INTEGER}
   </select>
+  <select id="findDistributionOfScore" resultType="com.file.share.platform.model.response.DistributionScore">
+    SELECT all_score allScore, count(*) num
+    from score
+    where subject_id= #{subjectId,jdbcType=INTEGER}
+    GROUP BY all_score;
+  </select>
 </mapper>

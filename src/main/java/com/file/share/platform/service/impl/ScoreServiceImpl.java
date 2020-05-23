@@ -2,6 +2,7 @@ package com.file.share.platform.service.impl;
 
 import com.file.share.platform.dao.ScoreMapper;
 import com.file.share.platform.model.Score;
+import com.file.share.platform.model.response.DistributionScore;
 import com.file.share.platform.service.ScoreService;
 import com.file.share.platform.core.AbstractService;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ScoreServiceImpl extends AbstractService<Score> implements ScoreSer
     @Override
     public List<Score> findScoreBySubjectId(Integer subjectId) {
         return scoreMapper.findScoreBySubjectId(subjectId);
+    }
+
+    @Override
+    public List<DistributionScore> findDistributionOfScore(Integer subjectId) {
+        return scoreMapper.findDistributionOfScore(subjectId);
     }
 }

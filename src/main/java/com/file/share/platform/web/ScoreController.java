@@ -2,15 +2,14 @@ package com.file.share.platform.web;
 import com.file.share.platform.core.Result;
 import com.file.share.platform.core.ResultGenerator;
 import com.file.share.platform.model.Score;
+import com.file.share.platform.model.response.DistributionScore;
 import com.file.share.platform.service.ScoreService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -52,5 +51,11 @@ public class ScoreController {
         List<Score> list = scoreService.findAll();
         PageInfo pageInfo = new PageInfo(list);
         return ResultGenerator.genSuccessResult(pageInfo);
+    }
+
+    @GetMapping("/distributionOfScore")
+    public Result distributionOfScore(@RequestParam(value = "subject_id")Integer subjectId, HttpServletRequest request){
+        List<DistributionScore> distributionScoreList = scoreService.findDistributionOfScore(subjectId);
+        return ResultGenerator.genSuccessResult(distributionScoreList);
     }
 }
