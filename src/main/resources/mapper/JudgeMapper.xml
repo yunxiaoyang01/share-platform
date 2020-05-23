@@ -13,4 +13,9 @@
     <result column="updator" jdbcType="VARCHAR" property="updator" />
     <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
   </resultMap>
+  <select id="findListBySubjectId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select  * from
+    judge
+    where subject_id = #{subjectId,jdbcType=INTEGER}
+  </select>
 </mapper>

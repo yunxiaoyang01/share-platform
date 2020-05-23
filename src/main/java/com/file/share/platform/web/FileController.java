@@ -125,11 +125,9 @@ public class FileController extends BaseController{
         String filename = "/file/" + fileName;
         return ResultGenerator.genSuccessResult(filename);
     }
-    @PostMapping(value = "/download")
-    public Result fileDownLoad(@RequestBody JSONObject jsonObject , HttpServletResponse response){
-        String fileUrl = jsonObject.getString("file_url");
-        Integer id = jsonObject.getInteger("id");
-        String[] fileArray = fileUrl.split("/");
+    @GetMapping(value = "/download")
+    public Result fileDownLoad(@RequestParam String file_url,@RequestParam Integer id , HttpServletResponse response){
+        String[] fileArray = file_url.split("/");
         String pathName = PROJECT_PATH+STATIC_PATH+fileArray[fileArray.length-1];
         java.io.File file = new java.io.File(pathName);
         if (!file.exists()){
@@ -142,7 +140,7 @@ public class FileController extends BaseController{
             file1.setUpdateTime(new Date());
             fileService.update(file1);
             //设置响应头，控制浏览器下载该文件
-            response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(fileArray[fileArray.length-1], "UTF-8"));
+            response.setHeader("content-disposition", "attachment;fileName=" + URLEncoder.encode(file1.getOrginFileName(), "UTF-8"));
             response.setHeader("content-transfer-encoding","binary");
             //读取要下载的文件，保存到文件输入流
             FileInputStream in = null;

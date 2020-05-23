@@ -36,7 +36,12 @@ public class ChoiceController extends BaseController{
 
     @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
+        Choice choice = choiceService.findById(id);
+        Subject subject = subjectService.findById(choice.getSubjectId());
         choiceService.deleteById(id);
+        subject.setChoiceNum(subject.getChoiceNum()-1);
+        subject.setAllScore(subject.getAllScore()-subject.getChoiceScore());
+        subjectService.update(subject);
         return ResultGenerator.genSuccessResult();
     }
 

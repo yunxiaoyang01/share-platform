@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.file.share.platform.dao.AnswerMapper">
+  <resultMap id="BaseResultMap" type="com.file.share.platform.model.Answer">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="subject_id" jdbcType="INTEGER" property="subjectId" />
+    <result column="question" jdbcType="INTEGER" property="question" />
+    <result column="question_type" jdbcType="INTEGER" property="questionType" />
+    <result column="answer" jdbcType="VARCHAR" property="answer" />
+    <result column="good_answer" jdbcType="VARCHAR" property="goodAnswer" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+  </resultMap>
+</mapper>

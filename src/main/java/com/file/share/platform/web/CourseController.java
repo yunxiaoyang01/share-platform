@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,7 +77,13 @@ public class CourseController extends BaseController{
     }
     @PostMapping("/findAll")
     public Result findAll(){
+        List<Course> result = new ArrayList<>();
+        Course course = new Course();
+        course.setId(0);
+        course.setCourseName("全部");
+        result.add(course);
         List<Course> list = courseService.findAll();
-        return ResultGenerator.genSuccessResult(list);
+        result.addAll(list);
+        return ResultGenerator.genSuccessResult(result);
     }
 }

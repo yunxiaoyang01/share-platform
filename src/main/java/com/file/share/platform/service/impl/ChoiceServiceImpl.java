@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -19,4 +20,8 @@ public class ChoiceServiceImpl extends AbstractService<Choice> implements Choice
     @Resource
     private ChoiceMapper choiceMapper;
 
+    @Override
+    public List<Choice> findListBySubjectId(Integer subjectId) {
+        return choiceMapper.findListBySubjectId(subjectId);
+    }
 }
