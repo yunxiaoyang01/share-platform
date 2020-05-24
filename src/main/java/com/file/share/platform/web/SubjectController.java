@@ -78,6 +78,7 @@ public class SubjectController extends BaseController{
             SubjectResp subjectResp = new SubjectResp();
             BeanUtils.copyProperties(subject,subjectResp);
             Course course = courseService.findById(subject.getCourseId());
+            subjectResp.setExam(false);
             if (user.getRole().equals("teacher")){
                 List<Score> scoreList = scoreService.findScoreBySubjectId(subject.getId());
                 if (scoreList!=null&&scoreList.size()>0){
@@ -89,7 +90,7 @@ public class SubjectController extends BaseController{
                     subjectResp.setExam(true);
                 }
             }
-            subjectResp.setExam(false);
+
             subjectResp.setCourseName(course.getCourseName());
             result.add(subjectResp);
         }

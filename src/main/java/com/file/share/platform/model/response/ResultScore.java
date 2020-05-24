@@ -11,6 +11,10 @@ import java.util.List;
 @Data
 public class ResultScore extends Subject{
 
+	private String courseName;
+
+	private String userName;
+
 	@JsonProperty("choices")
 	private List<ChoiceAnswer> choiceAnswers;
 

@@ -55,6 +55,17 @@ public class Subject {
     @Column(name="user_id")
     private Integer userId;
 
+    @Column(name = "exam_num")
+    private Integer examNum;
+
+
+    public Integer getExamNum() {
+        return examNum;
+    }
+
+    public void setExamNum(Integer examNum) {
+        this.examNum = examNum;
+    }
 
     public Integer getUserId() {
         return userId;

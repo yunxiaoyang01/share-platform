@@ -42,6 +42,12 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
     @Resource
     private JudgeMapper judgeMapper;
 
+    @Resource
+    private CourseMapper courseMapper;
+
+    @Resource
+    private UserMapper userMapper;
+
     @Override
     public boolean submitAnswer(AnswerReq answerReq, User user) {
         boolean b = true;
@@ -120,6 +126,8 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             score.setAllScore(score.getChoiceScore()+score.getJudgeScore());
             //保存总成绩
             scoreMapper.insertSelective(score);
+            subject.setExamNum(subject.getExamNum()==null?1:subject.getExamNum()+1);
+            subjectMapper.updateByPrimaryKeySelective(subject);
         }catch (Throwable e1) {
             b = false;
             e1.printStackTrace();
@@ -133,7 +141,7 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
         List<ChoiceAnswer> choiceAnswers = new ArrayList<ChoiceAnswer>();
         List<JudgeAnswer> judgeAnswers = new ArrayList<JudgeAnswer>();
         // TODO Auto-generated method stub
-        Subject subjectById = subjectMapper.selectByPrimaryKey(subjectId);
+        Subject subject = subjectMapper.selectByPrimaryKey(subjectId);
         //得到所有的选择题
         List<Choice> choices = choiceMapper.findListBySubjectId(subjectId);
         //得到所有的判断题
@@ -168,6 +176,11 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             judgeAnswers.add(judgeAnswer);//加入集合
         }
         ResultScore resultScore = new ResultScore();
+        BeanUtils.copyProperties(subject,resultScore);
+        Course course = courseMapper.selectByPrimaryKey(subject.getCourseId());
+        resultScore.setCourseName(course.getCourseName());
+        User user = userMapper.selectByPrimaryKey(userId);
+        resultScore.setUserName(user.getUserName());
         resultScore.setChoiceAnswers(choiceAnswers);
         resultScore.setJudgeAnswers(judgeAnswers);
         return resultScore;

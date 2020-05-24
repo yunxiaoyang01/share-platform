@@ -13,6 +13,7 @@
     <result column="choice_score" jdbcType="INTEGER" property="choiceScore" />
     <result column="judge_score" jdbcType="INTEGER" property="judgeScore" />
     <result column="all_score" jdbcType="INTEGER" property="allScore" />
+    <result column="exam_num" jdbcType="INTEGER" property="examNum" />
   </resultMap>
   <sql id="Base_Column_List">
     id,name,course_id,choice_num,judge_num,choice_score,judge_score,all_score
