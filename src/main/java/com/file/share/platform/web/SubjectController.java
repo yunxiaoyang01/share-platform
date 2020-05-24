@@ -31,6 +31,7 @@ public class SubjectController extends BaseController{
             return ResultGenerator.genNotLogin();
         }
         subject.setUserId(user.getId());
+        subject.setExamNum(0);
         subjectService.save(subject);
         return ResultGenerator.genSuccessResult();
     }

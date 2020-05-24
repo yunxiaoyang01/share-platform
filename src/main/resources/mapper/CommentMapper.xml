@@ -7,10 +7,15 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="p_id" jdbcType="INTEGER" property="pId"/>
+    <result column="parent_id" jdbcType="INTEGER" property="parentId"/>
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="user_id" jdbcType="INTEGER" property="userId"/>
+    <result column="review_user_id" jdbcType="INTEGER" property="reviewUserId"/>
+    <result column="b_review_user_id" jdbcType="INTEGER" property="bReviewUserId"/>
     <result column="file_id" jdbcType="INTEGER" property="fileId"/>
   </resultMap>
+  <select id="findCommentByParentId" resultMap="BaseResultMap">
+    select * from comment
+    where parent_id = #{parentId,jdbcType=INTEGER}
+  </select>
 </mapper>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.file.share.platform.dao.ReplyMapper">
+  <resultMap id="BaseResultMap" type="com.file.share.platform.model.Reply">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="talk_id" jdbcType="INTEGER" property="talkId" />
+    <result column="reply" jdbcType="VARCHAR" property="reply" />
+    <result column="parent_id" jdbcType="INTEGER" property="parentId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="review_user_id" jdbcType="TIMESTAMP" property="reviewUserId" />
+    <result column="b_review_user_id" jdbcType="TIMESTAMP" property="bReviewUserId" />
+  </resultMap>
+
+  <select id="findByTalkId" resultMap="BaseResultMap">
+    select * from reply
+    where talk_id = #{talkId,jdbcType=INTEGER}
+</select>
+</mapper>

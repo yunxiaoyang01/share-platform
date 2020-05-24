@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -30,5 +31,10 @@ public class CommentServiceImpl extends AbstractService<Comment> implements Comm
         comment.setReviewUserId(user.getId());
         comment.setCreateTime(new Date());
         commentMapper.insert(comment);
+    }
+
+    @Override
+    public List<Comment> findCommentByParentId(Integer parentId) {
+        return commentMapper.findCommentByParentId(parentId);
     }
 }

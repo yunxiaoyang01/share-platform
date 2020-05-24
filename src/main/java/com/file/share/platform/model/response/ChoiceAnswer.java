@@ -11,4 +11,6 @@ public class ChoiceAnswer extends Choice{
 	private String goodAnswer;
 
 	private boolean isTrue;
+
+	private Integer questionType;
 }

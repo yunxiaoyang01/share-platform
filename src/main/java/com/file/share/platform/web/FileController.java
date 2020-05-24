@@ -91,7 +91,7 @@ public class FileController extends BaseController{
         for (File file:list){
             FileResponse fileResponse = new FileResponse();
             BeanUtils.copyProperties(file,fileResponse);
-            if(file.getUserId().equals(user.getId())||user.getRole().equals("admin")){
+            if(file.getUserId().equals(user.getId())){
                 fileResponse.setMine(true);
             }else {
                 fileResponse.setMine(false);

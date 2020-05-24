@@ -12,4 +12,6 @@ public class JudgeAnswer extends Judge{
 	private String goodAnswer;
 
 	private boolean isTrue;
+
+	private Integer questionType;
 }

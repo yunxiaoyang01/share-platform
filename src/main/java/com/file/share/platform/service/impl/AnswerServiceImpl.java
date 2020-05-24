@@ -159,6 +159,7 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             }else{
                 choiceAnswer.setTrue(false);
             }
+            choiceAnswer.setQuestionType(1);
             choiceAnswers.add(choiceAnswer);//加入集合
         }
         for(Judge judge : judges){
@@ -173,6 +174,7 @@ public class AnswerServiceImpl extends AbstractService<Answer> implements Answer
             }else{
                 judgeAnswer.setTrue(false);
             }
+            judgeAnswer.setQuestionType(2);
             judgeAnswers.add(judgeAnswer);//加入集合
         }
         ResultScore resultScore = new ResultScore();
