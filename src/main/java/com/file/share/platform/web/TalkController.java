@@ -75,21 +75,22 @@ public class TalkController extends BaseController {
             return ResultGenerator.genNotLogin();
         }
         PageHelper.startPage(baseSearch.getPage(), baseSearch.getSize());
-        List<Talk> list = new ArrayList<>();
-       if(user.getRole()!="student"){
-           list = talkService.findAll();
-       }else{
-           Condition condition = new Condition(Talk.class);
-           Example.Criteria criteria = condition.createCriteria();
-           criteria.andEqualTo("userId",user.getId());
-           list = talkService.findByCondition(condition);
-       }
+        List<Talk> list  = talkService.findAll();
         List<TalkListResp> result = new ArrayList<>();
         for(Talk talk:list){
             TalkListResp talkListResp = new TalkListResp();
             BeanUtils.copyProperties(talk,talkListResp);
             List<Reply> replies = replyService.findByTalkId(talk.getId());
             talkListResp.setReplyNum(replies==null||replies.size()==0?0:replies.size());
+            talkListResp.setMine(false);
+            User talkUser = userService.findById(talk.getUserId());
+            talkListResp.setUserName(talkUser.getUserName());
+            if(user.getRole().equals("admin")){
+                talkListResp.setMine(true);
+            }
+            if(user.getId().equals(talk.getUserId())){
+                talkListResp.setMine(true);
+            }
             result.add(talkListResp);
         }
         PageInfo pageInfo = new PageInfo(result);

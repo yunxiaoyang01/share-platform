@@ -7,4 +7,8 @@ import lombok.Data;
 public class TalkListResp extends Talk {
 
     private Integer replyNum;
+
+    private String userName;
+
+    private boolean isMine;
 }

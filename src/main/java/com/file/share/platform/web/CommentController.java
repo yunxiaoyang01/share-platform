@@ -34,7 +34,7 @@ public class CommentController extends BaseController{
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     public Result delete(@RequestParam Integer id) {
         commentService.deleteById(id);
         return ResultGenerator.genSuccessResult();
@@ -46,7 +46,7 @@ public class CommentController extends BaseController{
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @GetMapping("/detail")
     public Result detail(@RequestParam Integer id) {
         Comment comment = commentService.findById(id);
         return ResultGenerator.genSuccessResult(comment);
