@@ -60,7 +60,11 @@ public class ReplyController extends BaseController{
     }
 
     @PostMapping("/list")
-    public Result list(@RequestBody ReplySearch replySearch) {
+    public Result list(@RequestBody ReplySearch replySearch,HttpServletRequest request) {
+        User user = getUserByToken(request);
+        if(user==null){
+            return ResultGenerator.genNotLogin();
+        }
         PageHelper.startPage(replySearch.getPage(), replySearch.getSize());
         Condition condition = new Condition(Reply.class);
         Example.Criteria criteria = condition.createCriteria();
@@ -71,8 +75,15 @@ public class ReplyController extends BaseController{
         for(Reply reply:list){
             ReplyResp replyResp = new ReplyResp();
             BeanUtils.copyProperties(reply,replyResp);
-            User user =  userService.findById(reply.getReviewUserId());
+            User reviewUser =  userService.findById(reply.getReviewUserId());
             replyResp.setReviewUserName(user.getUserName());
+            replyResp.setMine(false);
+            if(user.getId().equals(reviewUser.getId())){
+                replyResp.setMine(true);
+            }
+            if(user.getRole().equals("admin")){
+                replyResp.setMine(true);
+            }
             if(reply.getbReviewUserId()!=null){
                 User bUser = userService.findById(reply.getbReviewUserId());
                 replyResp.setBReviewUserName(bUser.getUserName());

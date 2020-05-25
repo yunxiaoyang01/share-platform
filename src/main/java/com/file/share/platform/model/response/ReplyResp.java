@@ -9,4 +9,6 @@ public class ReplyResp extends Reply {
     private String reviewUserName;
 
     private String bReviewUserName;
+
+    private boolean isMine;
 }
